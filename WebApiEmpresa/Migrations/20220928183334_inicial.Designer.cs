@@ -11,14 +11,14 @@ using WebApiEmpresa;
 namespace WebApiEmpresa.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220923215928_Initial")]
-    partial class Initial
+    [Migration("20220928183334_inicial")]
+    partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.1")
+                .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -37,14 +37,14 @@ namespace WebApiEmpresa.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("apellido")
-                        .HasColumnType("int");
+                    b.Property<string>("apellido")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EmpresaId");
 
-                    b.ToTable("Empleado");
+                    b.ToTable("Empleados");
                 });
 
             modelBuilder.Entity("WebApiEmpresa.Entidades.Empresa", b =>
@@ -60,7 +60,7 @@ namespace WebApiEmpresa.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Empresa");
+                    b.ToTable("Empresas");
                 });
 
             modelBuilder.Entity("WebApiEmpresa.Entidades.Empleado", b =>

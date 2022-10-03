@@ -11,14 +11,51 @@ namespace WebApiEmpresa.Controllers
     {
         private readonly ApplicationDbContext dbContext;
 
-        public EmpresasController(ApplicationDbContext dbContext)
+        public EmpresasController(ApplicationDbContext context)
         {
-            this.dbContext = dbContext;
+            this.dbContext = context;
         }
 
         [HttpGet]
+        [HttpGet("listado")]
+        [HttpGet("/listado")]
         public async Task<ActionResult<List<Empresa>>> GetAll(){
-            return await dbContext.Empresa.ToListAsync();
+            return await dbContext.Empresas.Include(x => x.Empleados).ToListAsync();
+        }
+        [HttpGet("primero")]
+        public async Task<ActionResult<Empresa>> PrimerEmpresa()
+        {
+            return await dbContext.Empresas.Include(x => x.Empleados).FirstOrDefaultAsync();
+        }
+        [HttpGet("primero2")]
+        public ActionResult<Empresa> PrimerEmpresaD()
+        {
+            return new Empresa() { Nombre = "FORD" };
+        }
+
+        [HttpGet("{id:int}/{param}")]
+        public async Task<ActionResult<Empresa>> Get(int id, string param)
+        {
+            var empresa = await dbContext.Empresas.Include(x => x.Empleados).FirstOrDefaultAsync(x => x.Id == id);
+
+            if (empresa == null)
+            {
+                return NotFound();
+            }
+
+            return empresa;
+        }
+        [HttpGet("{nombre}")]
+        public async Task<ActionResult<Empresa>> GetNombre(String nombre)
+        {
+            var empresa = await dbContext.Empresas.FirstOrDefaultAsync(x => x.Nombre == nombre);
+
+            if (empresa == null)
+            {
+                return NotFound();
+            }
+
+            return empresa;
         }
 
         [HttpPost]
@@ -32,7 +69,7 @@ namespace WebApiEmpresa.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Put(Empresa empresa, int id)
         {
-            var exist = await dbContext.Empresa.AnyAsync(x => x.Id == id);
+            var exist = await dbContext.Empresas.AnyAsync(x => x.Id == id);
             if (!exist)
             {
                 return NotFound();
@@ -51,7 +88,7 @@ namespace WebApiEmpresa.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var exist = await dbContext.Empresa.AnyAsync(x => x.Id == id);
+            var exist = await dbContext.Empresas.AnyAsync(x => x.Id == id);
             if (!exist)
             {
                 return NotFound("Registro no encontrado");

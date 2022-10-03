@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using WebApiEmpresa.Entidades;
 
 
@@ -18,40 +17,63 @@ namespace WebApiEmpresa.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Empleado>>> Get()
+        public async Task<ActionResult<List<Empleado>>> GetAll()
         {
-            return await dbContext.Empleado.Include(x => x.Nombre).ToListAsync();
+            return await dbContext.Empleados.ToListAsync();
+        }
+        [HttpGet("primero")]
+        public async Task<ActionResult<Empleado>> PrimerEmpleado()
+        {
+            return await dbContext.Empleados.FirstOrDefaultAsync();
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Empleado empleados)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Empleado>> Get(int id)
         {
-            var exist = await dbContext.Empleado.AnyAsync(x => x.Id == empleados.Id);
+            var empleado = await dbContext.Empleados.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (!exist)
+            if (empleado == null)
             {
-                return BadRequest($"No existe pais relacionado al id");
+                return NotFound();
             }
 
-            dbContext.Add(empleados);
+            return empleado;
+        }
+        [HttpGet("{nombre}")]
+        public async Task<ActionResult<Empleado>> GetNombre(String nombre)
+        {
+            var empleado = await dbContext.Empleados.FirstOrDefaultAsync(x => x.Nombre == nombre);
+
+            if (empleado == null)
+            {
+                return NotFound();
+            }
+
+            return empleado;
+        }
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] Empleado empleado)
+        {
+            
+            dbContext.Add(empleado);
             await dbContext.SaveChangesAsync();
             return Ok();
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(Empleado empleados, int id)
+        public async Task<ActionResult> Put(Empleado empleado, int id)
         {
-            var exist = await dbContext.Empleado.AnyAsync(x => x.Id == id);
+            var exist = await dbContext.Empleados.AnyAsync(x => x.Id == id);
             if (!exist)
             {
                 return NotFound("Empleados no encontrada");
             }
 
-            if (empleados.Id != id)
+            if (empleado.Id != id)
             {
                 return BadRequest("Empleados sin id coincidente");
             }
-            dbContext.Update(empleados);
+            dbContext.Update(empleado);
             await dbContext.SaveChangesAsync();
             return Ok();
         }
@@ -59,7 +81,7 @@ namespace WebApiEmpresa.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var exist = await dbContext.Empleado.AnyAsync(x => x.Id == id);
+            var exist = await dbContext.Empleados.AnyAsync(x => x.Id == id);
 
             if (!exist)
             {

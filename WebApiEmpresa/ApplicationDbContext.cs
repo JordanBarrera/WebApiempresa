@@ -10,7 +10,7 @@ namespace WebApiEmpresa
 
         }
 
-        public DbSet<Empresa> Empresa { get; set; }
-        public DbSet<Empleado> Empleado { get; set; }
+        public DbSet<Empresa> Empresas { get; set; }
+        public DbSet<Empleado> Empleados { get; set; }
     }
 }

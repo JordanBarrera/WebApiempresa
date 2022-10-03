@@ -4,12 +4,12 @@
 
 namespace WebApiEmpresa.Migrations
 {
-    public partial class Initial : Migration
+    public partial class inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Empresa",
+                name: "Empresas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -18,43 +18,43 @@ namespace WebApiEmpresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Empresa", x => x.Id);
+                    table.PrimaryKey("PK_Empresas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Empleado",
+                name: "Empleados",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    apellido = table.Column<int>(type: "int", nullable: false),
+                    apellido = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmpresaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Empleado", x => x.Id);
+                    table.PrimaryKey("PK_Empleados", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Empleado_Empresa_EmpresaId",
+                        name: "FK_Empleados_Empresas_EmpresaId",
                         column: x => x.EmpresaId,
-                        principalTable: "Empresa",
+                        principalTable: "Empresas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Empleado_EmpresaId",
-                table: "Empleado",
+                name: "IX_Empleados_EmpresaId",
+                table: "Empleados",
                 column: "EmpresaId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Empleado");
+                name: "Empleados");
 
             migrationBuilder.DropTable(
-                name: "Empresa");
+                name: "Empresas");
         }
     }
 }
