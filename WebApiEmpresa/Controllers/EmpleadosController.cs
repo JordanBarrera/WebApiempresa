@@ -11,14 +11,17 @@ namespace WebApiEmpresa.Controllers
     public class EmpleadosController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
-        public EmpleadosController(ApplicationDbContext context)
+        private readonly ILogger<EmpleadosController> log;
+        public EmpleadosController(ApplicationDbContext context,ILogger<EmpleadosController> log)
         {
             dbContext = context;
+            this.log = log;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Empleado>>> GetAll()
         {
+            log.LogInformation("Obteniendo listado de empleados");
             return await dbContext.Empleados.ToListAsync();
         }
         [HttpGet("primero")]
@@ -36,7 +39,7 @@ namespace WebApiEmpresa.Controllers
             {
                 return NotFound();
             }
-
+            log.LogInformation("EL ID ES: " + id);
             return empleado;
         }
         [HttpGet("{nombre}")]

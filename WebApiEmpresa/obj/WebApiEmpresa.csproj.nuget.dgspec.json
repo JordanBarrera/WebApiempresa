@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Jorda\\Desktop\\back-end\\WebApiEmpresa\\WebApiEmpresa\\WebApiEmpresa.csproj": {}
+    "C:\\Users\\Jorda\\Desktop\\back-end\\webapi\\WebApiempresa\\WebApiEmpresa\\WebApiEmpresa.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Jorda\\Desktop\\back-end\\WebApiEmpresa\\WebApiEmpresa\\WebApiEmpresa.csproj": {
+    "C:\\Users\\Jorda\\Desktop\\back-end\\webapi\\WebApiempresa\\WebApiEmpresa\\WebApiEmpresa.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jorda\\Desktop\\back-end\\WebApiEmpresa\\WebApiEmpresa\\WebApiEmpresa.csproj",
+        "projectUniqueName": "C:\\Users\\Jorda\\Desktop\\back-end\\webapi\\WebApiempresa\\WebApiEmpresa\\WebApiEmpresa.csproj",
         "projectName": "WebApiEmpresa",
-        "projectPath": "C:\\Users\\Jorda\\Desktop\\back-end\\WebApiEmpresa\\WebApiEmpresa\\WebApiEmpresa.csproj",
+        "projectPath": "C:\\Users\\Jorda\\Desktop\\back-end\\webapi\\WebApiempresa\\WebApiEmpresa\\WebApiEmpresa.csproj",
         "packagesPath": "C:\\Users\\Jorda\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jorda\\Desktop\\back-end\\WebApiEmpresa\\WebApiEmpresa\\obj\\",
+        "outputPath": "C:\\Users\\Jorda\\Desktop\\back-end\\webapi\\WebApiempresa\\WebApiEmpresa\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Jorda\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,7 +40,11 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
-            "Microsoft.EntityFrameworkCore": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
               "version": "[6.0.1, )"
             },
@@ -56,7 +60,7 @@
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.2.3, )"
+              "version": "[6.4.0, )"
             }
           },
           "imports": [
@@ -78,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

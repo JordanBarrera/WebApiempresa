@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApiEmpresa.Entidades;
 using Microsoft.EntityFrameworkCore;
+using WebApiEmpresa.Service;
+using WebApiEmpresa.Filtros;
 
 
 namespace WebApiEmpresa.Controllers
@@ -10,16 +12,57 @@ namespace WebApiEmpresa.Controllers
     public class EmpresasController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IService service;
+        private readonly ServiceTransient serviceTransient;
+        private readonly ServiceScoped serviceScoped;
+        private readonly ServiceSingleton serviceSingleton;
+        private readonly ILogger<EmpresasController> logger;
+        private readonly IWebHostEnvironment env;
+        private readonly string nuevosRegistros = "nuevosRegistros.txt";
+        private readonly string registrosConsultados = "registrosConsultados.txt";
 
-        public EmpresasController(ApplicationDbContext context)
+
+        public EmpresasController(ApplicationDbContext context, IService service,
+            ServiceTransient serviceTransient, ServiceScoped serviceScoped,
+            ServiceSingleton serviceSingleton, ILogger<EmpresasController> logger,
+            IWebHostEnvironment env)
         {
             this.dbContext = context;
+            this.service = service;
+            this.serviceTransient = serviceTransient;
+            this.serviceScoped = serviceScoped;
+            this.serviceSingleton = serviceSingleton;
+            this.logger = logger;
+            this.env = env;
         }
+
+
+        [HttpGet("GUID")]
+        [ResponseCache(Duration = 10)]
+        [ServiceFilter(typeof(FiltroDeAccion))]
+        public ActionResult ObtenerGuid()
+        {
+            
+            logger.LogInformation("Durante la ejecucion");
+            return Ok(new
+            {
+                EmpresasControllerTransient = serviceTransient.guid,
+                ServiceA_Transient = service.GetTransient(),
+                EmpresasControllerScoped = serviceScoped.guid,
+                ServiceA_Scoped = service.GetScoped(),
+                EmpresasControllerSingleton = serviceSingleton.guid,
+                ServiceA_Singleton = service.GetSingleton()
+            });
+        }
+
 
         [HttpGet]
         [HttpGet("listado")]
         [HttpGet("/listado")]
         public async Task<ActionResult<List<Empresa>>> GetAll(){
+            logger.LogInformation("Se obtiene el listado de dueños");
+            logger.LogWarning("Mensaje de prueba warning");
+            service.EjecutarJob();
             return await dbContext.Empresas.Include(x => x.Empleados).ToListAsync();
         }
         [HttpGet("primero")]
@@ -40,8 +83,11 @@ namespace WebApiEmpresa.Controllers
 
             if (empresa == null)
             {
+                logger.LogError("No se encuentra el deuño. ");
                 return NotFound();
             }
+            var ruta = $@"{env.ContentRootPath}\wwwroot\{registrosConsultados}";
+            using (StreamWriter writer = new StreamWriter(ruta, append: true)) { writer.WriteLine(empresa.Id + " " + empresa.Nombre); }
 
             return empresa;
         }

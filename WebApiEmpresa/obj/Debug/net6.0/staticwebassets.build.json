@@ -1,11 +1,37 @@
 {
   "Version": 1,
-  "Hash": "p5vlk3N8k5d4Tj3m3NvvYsky7zSlu685wVsZ3IePcC8=",
+  "Hash": "0XY+cIsHjaeJEI1t/OG9iDaHu8kXiovlgVGSwpZXvzo=",
   "Source": "WebApiEmpresa",
   "BasePath": "_content/WebApiEmpresa",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "WebApiEmpresa\\wwwroot",
+      "Source": "WebApiEmpresa",
+      "ContentRoot": "C:\\Users\\Jorda\\Desktop\\back-end\\webapi\\WebApiempresa\\WebApiEmpresa\\wwwroot\\",
+      "BasePath": "_content/WebApiEmpresa",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\Jorda\\Desktop\\back-end\\webapi\\WebApiempresa\\WebApiEmpresa\\wwwroot\\ArchivoEmpresa1.txt",
+      "SourceId": "WebApiEmpresa",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Jorda\\Desktop\\back-end\\webapi\\WebApiempresa\\WebApiEmpresa\\wwwroot\\",
+      "BasePath": "_content/WebApiEmpresa",
+      "RelativePath": "ArchivoEmpresa1.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\ArchivoEmpresa1.txt"
+    }
+  ]
 }
