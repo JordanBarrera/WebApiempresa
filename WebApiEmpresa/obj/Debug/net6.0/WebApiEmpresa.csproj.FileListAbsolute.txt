@@ -121,3 +121,6 @@ C:\Users\Jorda\Desktop\back-end\webapi\WebApiempresa\WebApiEmpresa\obj\Debug\net
 C:\Users\Jorda\Desktop\back-end\webapi\WebApiempresa\WebApiEmpresa\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.InMemory.dll
 C:\Users\Jorda\Desktop\back-end\webapi\WebApiempresa\WebApiEmpresa\bin\Debug\net6.0\WebApiEmpresa.staticwebassets.runtime.json
 C:\Users\Jorda\Desktop\back-end\webapi\WebApiempresa\WebApiEmpresa\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Jorda\Desktop\back-end\webapi\WebApiempresa\WebApiEmpresa\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\Jorda\Desktop\back-end\webapi\WebApiempresa\WebApiEmpresa\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Jorda\Desktop\back-end\webapi\WebApiempresa\WebApiEmpresa\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll

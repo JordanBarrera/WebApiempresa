@@ -9,9 +9,7 @@ namespace WebApiEmpresa.Entidades
 
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Nombre { get; set; }
-
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string apellido { get; set; }
-        public int EmpresaId { get; set; }
+        public List<EmpleadoEmpresas> EmpleadoEmpresas { get; set; }
+        
     }
 }

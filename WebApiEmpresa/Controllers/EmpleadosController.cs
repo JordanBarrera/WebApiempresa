@@ -1,101 +1,114 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApiEmpresa;
+using WebApiEmpresa.DTOs;
 using WebApiEmpresa.Entidades;
-
-
-
-namespace WebApiEmpresa.Controllers
+namespace WebApiMascota2.Controllers
 {
     [ApiController]
-    [Route("api/empleados")]
-    public class EmpleadosController : ControllerBase
+    [Route("empleado")]
+    public class MascotasController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
-        private readonly ILogger<EmpleadosController> log;
-        public EmpleadosController(ApplicationDbContext context,ILogger<EmpleadosController> log)
+        private readonly IMapper mapper;
+
+        public MascotasController(ApplicationDbContext context, IMapper mapper, IConfiguration configuration)
         {
-            dbContext = context;
-            this.log = log;
+            this.dbContext = context;
+            this.mapper = mapper;
         }
+
 
         [HttpGet]
-        public async Task<ActionResult<List<Empleado>>> GetAll()
+        [AllowAnonymous]
+        public async Task<ActionResult<List<GetEmpleadoDTO>>> Get()
         {
-            log.LogInformation("Obteniendo listado de empleados");
-            return await dbContext.Empleados.ToListAsync();
-        }
-        [HttpGet("primero")]
-        public async Task<ActionResult<Empleado>> PrimerEmpleado()
-        {
-            return await dbContext.Empleados.FirstOrDefaultAsync();
+            var empleado = await dbContext.Empleado.ToListAsync();
+            return mapper.Map<List<GetEmpleadoDTO>>(empleado);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Empleado>> Get(int id)
+
+        [HttpGet("{id:int}", Name = "obtenerempleado")]
+        public async Task<ActionResult<EmpleadoDTOConEmpresa>> Get(int id)
         {
-            var empleado = await dbContext.Empleados.FirstOrDefaultAsync(x => x.Id == id);
+            var empleado = await dbContext.Empleado
+                .Include(empleadoDB => empleadoDB.EmpleadoEmpresas)
+                .ThenInclude(empleadoEmpresaDB => empleadoEmpresaDB.Empresa)
+                .FirstOrDefaultAsync(empleadoDB => empleadoDB.Id == id);
 
             if (empleado == null)
             {
                 return NotFound();
             }
-            log.LogInformation("EL ID ES: " + id);
-            return empleado;
+
+            return mapper.Map<EmpleadoDTOConEmpresa>(empleado);
+
         }
+
         [HttpGet("{nombre}")]
-        public async Task<ActionResult<Empleado>> GetNombre(String nombre)
+        public async Task<ActionResult<List<GetEmpleadoDTO>>> Get([FromRoute] string nombre)
         {
-            var empleado = await dbContext.Empleados.FirstOrDefaultAsync(x => x.Nombre == nombre);
+            var empleados = await dbContext.Empleado.Where(empleadosDB => empleadosDB.Nombre.Contains(nombre)).ToListAsync();
 
-            if (empleado == null)
+            return mapper.Map<List<GetEmpleadoDTO>>(empleados);
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] EmpleadoDTO empleadoDto)
+        {
+
+            var existeEmpleadoMismoNombre = await dbContext.Empleado.AnyAsync(x => x.Nombre == empleadoDto.Nombre);
+
+            if (existeEmpleadoMismoNombre)
             {
-                return NotFound();
+                return BadRequest($"Ya existe un autor con el nombre {empleadoDto.Nombre}");
             }
 
-            return empleado;
-        }
-        [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Empleado empleado)
-        {
-            
+            var empleado = mapper.Map<Empleado>(empleadoDto);
+
             dbContext.Add(empleado);
             await dbContext.SaveChangesAsync();
-            return Ok();
+
+            var empleadoDTO = mapper.Map<GetEmpleadoDTO>(empleado);
+
+            return CreatedAtRoute("obtenerEmpleado", new { id = empleado.Id }, empleadoDTO);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(Empleado empleado, int id)
+        [HttpPut("{id:int}")] // api/empleado/1
+        public async Task<ActionResult> Put(EmpleadoDTO empleadoCreacionDTO, int id)
         {
-            var exist = await dbContext.Empleados.AnyAsync(x => x.Id == id);
+            var exist = await dbContext.Empleado.AnyAsync(x => x.Id == id);
             if (!exist)
             {
-                return NotFound("Empleados no encontrada");
+                return NotFound();
             }
 
-            if (empleado.Id != id)
-            {
-                return BadRequest("Empleados sin id coincidente");
-            }
+            var empleado = mapper.Map<Empleado>(empleadoCreacionDTO);
+            empleado.Id = id;
+
             dbContext.Update(empleado);
             await dbContext.SaveChangesAsync();
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var exist = await dbContext.Empleados.AnyAsync(x => x.Id == id);
-
+            var exist = await dbContext.Empleado.AnyAsync(x => x.Id == id);
             if (!exist)
             {
-                return NotFound("Registro no encontrado");
+                return NotFound("El Recurso no fue encontrado.");
             }
 
-            dbContext.Remove(new Empleado() { Id = id });
-
+            dbContext.Remove(new Empleado()
+            {
+                Id = id
+            });
             await dbContext.SaveChangesAsync();
             return Ok();
         }
     }
 }
-    

@@ -2,13 +2,10 @@
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using WebApiEmpresa.Filtros;
-using System.Text.Json.Serialization;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using WebApiEmpresa.Middlewares;
-using WebApiEmpresa.Service;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+
 
 namespace WebApiEmpresa
 {
@@ -16,6 +13,7 @@ namespace WebApiEmpresa
     {
         public Startup(IConfiguration configuration)
         {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             Configuration = configuration;
         }
 
@@ -29,13 +27,6 @@ namespace WebApiEmpresa
             }).AddJsonOptions(x =>
             x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-            services.AddTransient<IService, ServiceA>();
-            services.AddTransient<ServiceTransient>();
-            services.AddTransient<ServiceTransient>();
-            services.AddScoped<ServiceScoped>();
-            services.AddSingleton<ServiceSingleton>();
-            services.AddTransient<FiltroDeAccion>();
-            services.AddHostedService<EscribirEnArchivo>();
             services.AddResponseCaching();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
@@ -49,19 +40,13 @@ namespace WebApiEmpresa
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+            services.AddAutoMapper(typeof(Startup));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            app.UseResponseHttpMiddleware();
 
-            app.Map("/maping", app =>
-            {
-                app.Run(async context =>
-                {
-                    await context.Response.WriteAsync("Interceptando las peticiones");
-                });
-            });
+            
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
