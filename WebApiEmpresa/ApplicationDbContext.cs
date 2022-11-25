@@ -19,7 +19,7 @@ namespace WebApiEmpresa
         }
 
         public DbSet<Empleado> Empleado { get; set; }
-        public DbSet<Empresa> Empresa { get; set; }
+        public DbSet<Empresas> Empresas { get; set; }
         public DbSet<Ocupacion> Ocupacion { get; set; }
 
         public DbSet<EmpleadoEmpresas> EmpleadoEmpresa { get; set; }

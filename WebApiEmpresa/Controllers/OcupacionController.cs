@@ -29,7 +29,7 @@ namespace WebApiMascota2.Controllers
         [HttpGet]
         public async Task<ActionResult<List<OcupacionDTO>>> Get(int empresaId)
         {
-            var existeEmpresa = await dbContext.Empresa.AnyAsync(empresaDB => empresaDB.Id == empresaId);
+            var existeEmpresa = await dbContext.Empresas.AnyAsync(empresaDB => empresaDB.Id == empresaId);
             if (!existeEmpresa)
             {
                 return NotFound();
@@ -75,7 +75,7 @@ namespace WebApiMascota2.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Put(int empresaId, int id, OcupacionCreacionDTO ocupacionCreacionDTO)
         {
-            var existeEmpresa = await dbContext.Empresa.AnyAsync(empDB => empDB.Id == empresaId);
+            var existeEmpresa = await dbContext.Empresas.AnyAsync(empDB => empDB.Id == empresaId);
             if (!existeEmpresa)
             {
                 return NotFound();

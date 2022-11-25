@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using WebApiEmpresa.DTOs;
 using WebApiEmpresa.Entidades;
+
 namespace WebApiEmpresa.Utilidades
 {
     public class AutoMapperProfiles : Profile
@@ -11,11 +12,12 @@ namespace WebApiEmpresa.Utilidades
             CreateMap<Empleado, GetEmpleadoDTO>();
             CreateMap<Empleado, EmpleadoDTOConEmpresa>()
                 .ForMember(empleadoDTO => empleadoDTO.Empresas, opciones => opciones.MapFrom(MapEmpleadoDTOEmpresas));
-            CreateMap<EmpresaCreacionDTO, Empresa>()
+            CreateMap<EmpresaCreacionDTO, Empresas>()
                 .ForMember(empresa => empresa.EmpleadoEmpresas, opciones => opciones.MapFrom(MapEmpleadoEmpresa));
-            CreateMap<Empresa, EmpresaDTO>();
-            CreateMap<Empresa, EmpresaDTOConEmpleados>()
-                .ForMember(empresaDTO => empresaDTO.Empleados, opciones => opciones.MapFrom(MapVeterinariasDTOMascotas));
+            CreateMap<Empresas, EmpresaDTO>();
+            CreateMap<Empresas, EmpresaDTOConEmpleados>()
+                .ForMember(empresaDTO => empresaDTO.Empleados, opciones => opciones.MapFrom(MapEmpleadoDTOEmpresas));
+            CreateMap<EmpresaPatchDTO, Empresas>().ReverseMap();
             CreateMap<OcupacionCreacionDTO, Ocupacion>();
             CreateMap<Ocupacion, OcupacionDTO>();
         }
@@ -31,14 +33,14 @@ namespace WebApiEmpresa.Utilidades
                 result.Add(new EmpresaDTO()
                 {
                     Id = empleadoEmpresa.EmpresaId,
-                    Nombre = empleadoEmpresa.Empresa.Nombre
+                    Nombre = empleadoEmpresa.Empresas.Nombre
                 });
             }
 
             return result;
         }
 
-        private List<GetEmpleadoDTO> MapVeterinariasDTOMascotas(Empresa empresa, EmpresaDTO empresaDTO)
+        private List<GetEmpleadoDTO> MapEmpleadoDTOEmpresas(Empresas empresa, EmpresaDTO empresaDTO)
         {
             var result = new List<GetEmpleadoDTO>();
 
@@ -59,7 +61,7 @@ namespace WebApiEmpresa.Utilidades
             return result;
         }
 
-        private List<EmpleadoEmpresas> MapEmpleadoEmpresa(EmpresaCreacionDTO empresaCreacionDTO, Empresa empresa)
+        private List<EmpleadoEmpresas> MapEmpleadoEmpresa(EmpresaCreacionDTO empresaCreacionDTO, Empresas empresa)
         {
             var resultado = new List<EmpleadoEmpresas>();
 

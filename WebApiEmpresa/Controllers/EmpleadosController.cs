@@ -9,12 +9,12 @@ namespace WebApiMascota2.Controllers
 {
     [ApiController]
     [Route("empleado")]
-    public class MascotasController : ControllerBase
+    public class Empresa : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
 
-        public MascotasController(ApplicationDbContext context, IMapper mapper, IConfiguration configuration)
+        public Empresa(ApplicationDbContext context, IMapper mapper, IConfiguration configuration)
         {
             this.dbContext = context;
             this.mapper = mapper;
@@ -35,7 +35,7 @@ namespace WebApiMascota2.Controllers
         {
             var empleado = await dbContext.Empleado
                 .Include(empleadoDB => empleadoDB.EmpleadoEmpresas)
-                .ThenInclude(empleadoEmpresaDB => empleadoEmpresaDB.Empresa)
+                .ThenInclude(empleadoEmpresaDB => empleadoEmpresaDB.Empresas)
                 .FirstOrDefaultAsync(empleadoDB => empleadoDB.Id == id);
 
             if (empleado == null)

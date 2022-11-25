@@ -2,7 +2,7 @@
 
 namespace WebApiEmpresa.Entidades
 {
-    public class Empresa
+    public class Empresas
     {
         public int Id { get; set; }
 

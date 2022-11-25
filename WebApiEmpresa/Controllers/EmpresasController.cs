@@ -4,16 +4,17 @@ using Microsoft.EntityFrameworkCore;
 using WebApiEmpresa;
 using WebApiEmpresa.DTOs;
 using WebApiEmpresa.Entidades;
-namespace WebApiMascota2.Controllers
+
+namespace WebApiEmpresa.Controllers
 {
     [ApiController]
-    [Route("veterinarias")]
-    public class VeterinariaController : ControllerBase
+    [Route("empresas")]
+    public class EmpresasController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
 
-        public VeterinariaController(ApplicationDbContext context, IMapper mapper)
+        public EmpresasController(ApplicationDbContext context, IMapper mapper)
         {
             this.dbContext = context;
             this.mapper = mapper;
@@ -21,15 +22,15 @@ namespace WebApiMascota2.Controllers
 
         [HttpGet]
         [HttpGet("/listadoEmpresa")]
-        public async Task<ActionResult<List<Empresa>>> GetAll()
+        public async Task<ActionResult<List<Empresas>>> GetAll()
         {
-            return await dbContext.Empresa.ToListAsync();
+            return await dbContext.Empresas.ToListAsync();
         }
 
         [HttpGet("{id:int}", Name = "obtenerEmpresa")]
         public async Task<ActionResult<EmpresaDTOConEmpleados>> GetById(int id)
         {
-            var empresa = await dbContext.Empresa
+            var empresa = await dbContext.Empresas
                 .Include(empleadoDB => empleadoDB.EmpleadoEmpresas)
                 .ThenInclude(empleadoEmpresaDB => empleadoEmpresaDB.Empleado)
                 .Include(ocupacionDB => ocupacionDB.Ocupacion)
@@ -61,7 +62,7 @@ namespace WebApiMascota2.Controllers
                 return BadRequest("No existe uno de los empleados enviados");
             }
 
-            var empresa = mapper.Map<Empresa>(empresaCreacionDTO);
+            var empresa = mapper.Map<Empresas>(empresaCreacionDTO);
 
 
             dbContext.Add(empresa);
@@ -75,7 +76,7 @@ namespace WebApiMascota2.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Put(int id, EmpresaCreacionDTO empresaCreacionDTO)
         {
-            var empresaDB = await dbContext.Empresa
+            var empresaDB = await dbContext.Empresas
                 .Include(x => x.EmpleadoEmpresas)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -94,13 +95,13 @@ namespace WebApiMascota2.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var exist = await dbContext.Empresa.AnyAsync(x => x.Id == id);
+            var exist = await dbContext.Empresas.AnyAsync(x => x.Id == id);
             if (!exist)
             {
                 return NotFound("El Recurso no fue encontrado.");
             }
 
-            dbContext.Remove(new Empresa { Id = id });
+            dbContext.Remove(new Empresas { Id = id });
             await dbContext.SaveChangesAsync();
             return Ok();
         }
